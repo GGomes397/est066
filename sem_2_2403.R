@@ -70,3 +70,68 @@ sum(contagem_quadrados)
 x2 <-sum((contagem_quadrados[1.2,2.2]-10)**(0.2))
 x2
 chisq.test(contagem_quadrados)
+
+#aula 26/03
+#Porque na ultima aula deu erro o teste
+amostra <- rmeu(1e3,xo,m,A,B)
+par <- (1:500)*2
+impar <- par -1
+plot(x= amostra[impar],y=amostra[par],xlim = c(0,1),ylim=c(0,1))
+reticulado <-seq(0,1,by=0.1)
+abline(h=reticulado, v = reticulado, col= "blue")
+cutx <- cut(amostra[impar],breaks = reticulado, include.lowest =T)
+cuty <- cut(amostra[par],breaks = reticulado, include.lowest =T)
+tabela <- table(cutx,cuty)
+sum(tabela)
+for(i in 1: 10){
+  xis <-(i-1)/10+0.05
+  for(j in 1:10){
+    ipsilon <- (j-1)/10+0.05
+    text(x=xis, y=ipsilon , label =tabela[i,j],
+         cex=0.85, font=2)
+  }
+}
+boxplot(tabela)
+mean(tabela)
+abline(h=5,lty=2, lwd=2)
+# Vamos fazer o teste chi squared 
+Ei <- 5
+X2 <- sum((tabela - Ei)**2)/Ei
+X2
+
+#vamos calcular o p valor 
+1-pchisq(X2,df=99)
+
+chisq.test(c(tabela))# Fazendo isso nós conseguimos transformar a tabela em um
+#unico valor que colocamos num vetor 
+#Gerando outro conjunto de números aleatórios 
+#o Professor escolheu X~Uniforme(a,b)
+# x= a+(b-a)U u é amostra que nós criamos 
+x <- -1 +2*amostra
+x
+hist(x)
+#gerador 2
+m <- 2**31
+A <- 65539
+B <- 0
+xo <- 5
+amostra2<- rmeu(1000,xo,m,A,B)
+hist(amostra2,freq = F)
+hist(amostra2,freq = F,breaks = 30)
+
+#A nossa amotra deve resultar numa uniforme(a,b) nós temos que ter que a nossa 
+#esperança deve ser (a+b)/2 e variância (b-a)^2/12 na nossa teoria a,b=0,1
+valores <- cut(amostra2,breaks = seq(from=0,to=1,by=1/100))
+tabela <- table(valores)
+#teste 1 (média)
+chisq.test(tabela)
+ks.test(amostra2,punif)
+#Como nosso p valor deu 0.2066>0.05 
+qqplot(qunif(ppoints(200), 0, 1), sample(amostra2, 200),
+       main = "Q-Q Plot", xlab = "Teórico", ylab = "Observado",
+       pch = 16, col = rgb(0, 0, 0, 0.5))
+abline(0, 1, col = "red")
+#
+hist(amostra2, breaks = 30, freq = FALSE, 
+     main = "Histograma", xlab = "Valor", col = "lightblue")
+curve(dunif(x, 0, 1), add = TRUE, col = "red", lwd = 2)
