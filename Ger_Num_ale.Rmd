@@ -1,0 +1,70 @@
+---
+title: "Ger_Num_ale"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+Nas ultimas semanas estamos estudado sobre a geração de números
+aleatórios e na aula eu notei que tive dificuldade de entender o porque
+estavamos fazendo esses algoritmos de geração de número aleatório e o
+que os nosso testes representavam .
+
+## Sequências de números aleatórios
+
+Definição -Sequências de números aleatórios (ou seja, imprevisíveis) são
+úteis em muitas aplicações. São úteis, em particular, para gerar dados
+de teste de programas. Números verdadeiramente aleatórios são muito
+difíceis de
+obter.(<https://www.ime.usp.br/~pf/algoritmos/aulas/random.html>)
+
+Eu entendi que nós deveriamos gerar números aleatórios , mas eu não
+entendia porque qualquer função não funcionava se eu queria apenas um
+número aleatórios, qualquer coisas bastaria. Só que me deaparei com as
+seguintes propriedades .
+
+### Propriedades dos Números Aleatórios
+
+-   Uma seqüência de números aleatórios, $x_{1}$, $x_{2}$,..., deve
+    possuir duas importantes propriedades: uniformidade e independência.
+-   Todo número aleatório xi é uma amostra independente de uma
+    distribuição uniforme e contínua no intervalo de zero a 1
+
+### Consequências dessas propriedades
+
+-   Se o intervalo de [0, 1] é subdividido em n classes, ou
+    subintervalos de igual tamanho, o valor esperado de observações em
+    cada intervalo será de , onde N é o número total de observações.
+
+-   probabilidade de observar um valor em um particular intervalo é
+    independente dos valores previamente obtidos \### Métodos Geradores
+    de Números Aleatório
+
+-   A técnica empregada mais comum faz uso de uma relação recursiva na
+    qual, o próximo número na seqüência é uma função do último ou dois
+    últimos números gerados . A função que baseamos o nosso algoritmo
+    recursivo é uma função determinística .Então podemos deduzir qual
+    serão os proximos números, por isso os numeros que geramos são
+    pseudo aleatórios . O objetivo em qualquer método de geração é
+    produzir uma seqüência de números aleatórios entre zero e 1, os
+    quais simulem ou imitem, as propriedades dos verdadeiros números
+    aleatórios. \### Propriedades Desejadas de Números Pseudo-aleatórios
+    :
+
+-   Deve ser computacionalmente eficiente: Uma vez que as simulações
+    necessitam da geração de, até mesmo, milhares de números aleatórios
+    em cada rodada, o tempo para processar cada geração deve ser mínimo;
+
+-   O período deve ser muito longo: Um período curto pode fazer com que
+    haja a reciclagem da seqüência de números aleatórios, resultando em
+    uma repetição da seqüência de eventos. Isto pode, conseqüentemente,
+    limitar o período utilizável de uma rodada de simulação .
+
+-   Os sucessivos valores devem ser independentes e uniformemente
+    distribuídos: A correlação entre os diversos valores gerados deve
+    ser pequena. A correlação, se significativa, indica dependência.
+
+    ### Método congruente Linear 
+
+    $$ x_{n}=a^{n}mod(m) $$
