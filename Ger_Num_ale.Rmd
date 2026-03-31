@@ -65,6 +65,6 @@ seguintes propriedades .
     distribuídos: A correlação entre os diversos valores gerados deve
     ser pequena. A correlação, se significativa, indica dependência.
 
-    ### Método congruente Linear 
+    ### Método congruente Linear
 
     $$ x_{n}=a^{n}mod(m) $$
