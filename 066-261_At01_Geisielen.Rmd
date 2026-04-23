@@ -1,0 +1,161 @@
+---
+title: "Lista 01"
+author: "Geisielen Gomes"
+date: "2026-04-22"
+output: html_document
+---
+
+## Questão 1
+
+```{r}
+mat <- 650
+mat%%3
+```
+
+A distruição usada será Gumbell $$F(x; \mu, \beta) = e^{-e^{-(x-\mu)/\beta}}$$ A função quantílica é dada por : $$u= e^{-e^{-(x-\mu)/\beta}}\\
+\ln(u)=-e^{-(x-\mu)/\beta}\\
+-\ln(u)=e^{-(x-\mu)/\beta} \\
+\ln(-\ln(u))=-\frac{x-\mu}{\beta}\\
+-\ln(-\ln(u))=\frac{x-\mu}{\beta}\\
+x=\mu-ln(-ln(u))\beta$$
+
+Para definir a função de gerador de números aleatórios fizemos :
+
+```{r}
+mu <- 0
+b <- 1
+
+gera_gum <- function(mu,b,n){
+  u <- runif(n,min = 0, max = 1)
+  x <- mu - b * log(-log(u))
+  return (x)
+}
+amostra<- gera_gum(mu,b,1000) 
+```
+
+Agora vamos ver como esse números se comportam :
+
+```{r}
+hist(amostra, breaks = 30, main = "Gerador Gumbel", col = "lightblue")
+```
+
+Nós percebemos que ela tem a assimetria caracteristica de uma distribuição Gumbell , mas para confirmamos nossa hipotese faremos :
+
+```{r}
+p_gumbel <- function(x, mu, b) {
+  exp(-exp(-(x - mu) / b))
+}
+print(ks.test(amostra, p_gumbel, mu = mu, b = b))
+```
+
+Como o **p-valor (0.8444)** foi significativamente maior que 0.5 , não rejeitamos a hipótese nula. Concluimos então que os nosso gerador foi bom .
+
+## Questão 2
+
+Utilizando o mesmo método da ultima questão chegamos que
+
+$$
+u=\frac{x^2+x}{2}\\
+2u=x^2 +x\\
+x^2+x-2u=0
+$$
+
+Procurando as raízes dessa equação chegamos em
+
+$$
+x=\frac{-1+\sqrt{1+8u}}{2}
+$$
+
+Escolhemos essa raiz porque a outra raíz chegariamos em valores negativos o que seria uma contradiçõ já uma fdp só resulta em valores positivos .
+
+```{r}
+gera_2 <- function(n){
+  u <- runif(n,min = 0,max=1)
+  x <- (-1+ (1+8*u)^(1/2))/2
+  return(x)
+}
+amostra2 <- gera_2(1000)
+hist(amostra2, breaks = 30, main = "Gerador Questão 2", col = "gray")
+```
+
+## Questão 3
+
+Do enunciado temos que :
+
+$$
+f_x(x)=\exp^{-2\left|x \right|}
+$$
+
+A acumulada dessa função é dada por
+
+$$
+F_X(x)=\frac{1}{2}\exp^{2x}, x<0\\
+F_X(x)=1-\frac{1}{2}\exp^{2x}, x\ge 0
+$$
+
+Pelo método da inversa temos que
+
+$$
+u=F_x(x)\\
+x=\frac{\ln(2u)}{2} , u<0.5\\
+x=\frac{\ln(-2u+2)}{2}, u>0.5
+$$
+
+Criando um gerador baseado nessas informações temos
+
+```{r}
+gera_3 <- function(n) {
+  u <- runif(n)
+  
+  x <- ifelse(u <= 0.5, 
+              log(2 * u) / 2,           
+              -log(2 * (1 - u)) / 2      
+       )
+  
+  return(x)
+}
+amostra3 <- gera_3(1000)
+hist(amostra3, breaks = 50, col = "coral", main = "Gerador Questão 3 (Método Inversa)")
+```
+
+## Questão 4
+
+```{r}
+
+gera_4 <- function(n){
+  u <- runif(n)
+  x <- log(u/(1-u))
+  return(x)
+}
+amostra4 <- gera_4(1e3)
+ks.test(amostra4, "plogis", location = 0, scale = 1)
+```
+
+Depois de ter gerado esse conjunto efazer o teste de kolmogorov ele não nos uma informação que nos dê poder para concluir que os numeros gerados resultam numa logistica (0,1) então por isso faremos o teste da qui- quadrado . Para fazermos esse teste nós faremos a variável `quebras` onde colocamos 10% dos dados em cada faixa criada , ou seja , temos 10 faixas no chisq.teste estamos esperando que tenha 100 números em cada um dos intervalos .
+
+```{r}
+quebras <- qlogis(seq(0, 1, by = 0.1))
+contagem_obs <- table(cut(amostra4, breaks = quebras, include.lowest = TRUE))
+chisq.test(contagem_obs)
+
+```
+
+Como nosso teste deu um p-valor \> 0.5 temos que o nosso gerador foi uma boa escolha . Para fazermos com a função que ja fizemos mas vamos introduzir um parâmetro de escala e um de locação , onde X segue uma distribuição Logística (0,1) teremos então
+
+$$
+Z=X\beta-\mu
+$$
+
+para exemplificar isso vamos fazer definindo esses parâmetros e vamos comparar com o gráficos logistica nesses parâmetros
+
+```{r}
+z <- -2+amostra4*2
+hist(z, breaks = 40, freq = FALSE, col = "lightgrey", 
+     main = "Amostra vs Densidade Teórica Logística(-2, 2)",
+     xlab = "Valores de z", ylab = "Densidade")
+x_seq <- seq(min(z), max(z), length.out = 500)
+y_teorico <- dlogis(x_seq, location = -2, scale = 2)
+lines(x_seq, y_teorico, col = "red", lwd = 2)
+legend("topright", legend = c("Amostra Gerada", "Densidade Teórica"),
+       col = c("grey", "red"), lwd = c(10, 2))
+```
