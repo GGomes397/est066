@@ -12,12 +12,11 @@ mat <- 650
 mat%%3
 ```
 
-A distruição usada será Gumbell $$F(x; \mu, \beta) = e^{-e^{-(x-\mu)/\beta}}$$ A função quantílica é dada por : $$u= e^{-e^{-(x-\mu)/\beta}}\\
-\ln(u)=-e^{-(x-\mu)/\beta}\\
--\ln(u)=e^{-(x-\mu)/\beta} \\
-\ln(-\ln(u))=-\frac{x-\mu}{\beta}\\
--\ln(-\ln(u))=\frac{x-\mu}{\beta}\\
-x=\mu-ln(-ln(u))\beta$$
+A distruição usada será Gumbell $$F(x;\mu, \beta) = e^{-e^{-(x-\mu)/\beta}}$$
+
+A função quantílica é dada por :
+
+$$ u= e^{-e^{-(x-\mu)/\beta}}$$ $$\ln(u)=-e^{-(x-\mu)/\beta}$$ $$-\ln(u)=e^{-(x-\mu)/\beta}$$ $$\ln(-\ln(u))=-\frac{x-\mu}{\beta}$$ $$-\ln(-\ln(u))=\frac{x-\mu}{\beta}$$ $$x=\mu-ln(-ln(u))\beta $$
 
 Para definir a função de gerador de números aleatórios fizemos :
 
@@ -31,6 +30,7 @@ gera_gum <- function(mu,b,n){
   return (x)
 }
 amostra<- gera_gum(mu,b,1000) 
+amostra
 ```
 
 Agora vamos ver como esse números se comportam :
@@ -158,4 +158,275 @@ y_teorico <- dlogis(x_seq, location = -2, scale = 2)
 lines(x_seq, y_teorico, col = "red", lwd = 2)
 legend("topright", legend = c("Amostra Gerada", "Densidade Teórica"),
        col = c("grey", "red"), lwd = c(10, 2))
+```
+
+## Questão 5
+
+Para respondermos essa questão nós vamos fixar $\alpha$ e usar dois métodos pra gerar a Uniforme(0,$\alpha$). Primeiro vamos usar o método da Transformação onde basicamente estamos "adicionando" um parâmetro de escala
+
+```{r}
+alpha <- 0.9
+z1 <-alpha*runif(1e3)
+```
+
+E o outra forma que faremos isso é usando o método da rejeição :
+
+```{r}
+alpha <- 0.9
+
+
+rejt <- function(n, alpha){
+  
+  x <- numeric(n)  # vetor para guardar resultados
+  i <- 1
+  
+  while(i <= n){
+    
+    u <- runif(1)
+    
+    if(u < alpha){   # aceita somente se u < alpha
+      x[i] <- u
+      i <- i + 1
+    }
+    
+  }
+  
+  return(x)
+}
+
+z2 <- rejt(1e3, alpha)
+
+```
+
+Comparando os dois métodos :
+
+```{r}
+par(mfrow=c(1,2))
+hist(z2, main="Método Rejeição", col="lightblue")
+hist(z1, main="Método alfa*U", col="lightgreen")
+```
+
+Notamos então que nesse caso o melhor método foi o da transformação por que tem a variação é bem menor que o método da transformação .
+
+## Questão 6
+
+```{r}
+m <-  2^(13) - 1 
+a <-  17
+xo <- 2
+gera6 <- function(n,m,a,xo){
+  v <- numeric(n)
+  xn <- xo
+  for (i in 1:n) {
+    xn <- (a * xn) %% m
+    v[i] <- xn
+    
+  }
+  return(v/m)#precisamos dividir por m porque assim garntimos que 0<v<1
+
+}
+x6 <- gera6(500,m,a,xo)
+#c , d
+x_i <- x6[1:499]
+x_proximo <- x6[2:500]
+cat("A covariância é ", cor(x_i, x_proximo))
+```
+
+```{r}
+plot(x_i, x_proximo, main="Gerador com a=17", xlab="x_i", ylab="x_{i+1}")
+```
+
+Para a=85 temos
+
+```{r}
+x_novo <- gera6(500, m, 85, xo)
+cat("A covariância é de ",cor(x_novo[1:499], x_novo[2:500]))
+
+```
+
+```{r}
+plot(x_novo[1:499], x_novo[2:500], main="Gerador com a=85")
+```
+
+## Questão 7
+
+Sejam $X_1, X_2 \sim N(0,1)$ variáveis aleatórias independentes e identicamente distribuídas (i.i.d.). Suas funções de densidade de probabilidade (f.d.p.) são dadas por: $$f_{X_1}(x_1) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x_1^2}{2}} \quad \text{e} \quad f_{X_2}(x_2) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x_2^2}{2}}$$ Como $X_1$ e $X_2$ são independentes, a f.d.p. conjunta é o produto das densidades marginais:
+
+$$f_{X_1, X_2}(x_1, x_2) = f_{X_1}(x_1) \cdot f_{X_2}(x_2) = \frac{1}{2\pi} e^{-\frac{x_1^2 + x_2^2}{2}}$$ Desejamos encontrar a densidade da variável $Y = \frac{X_1}{X_2}$. Utilizando a fórmula da densidade da razão para duas variáveis aleatórias, temos: $$f_Y(y) = \int_{-\infty}^{\infty} |x_2| f_{X_1, X_2}(y x_2, x_2) \, dx_2$$ Substituindo a densidade conjunta na integral, onde $x_1$ é substituído por $y x_2$: $$f_Y(y) = \int_{-\infty}^{\infty} |x_2| \frac{1}{2\pi} e^{-\frac{(yx_2)^2 + x_2^2}{2}} \, dx_2$$
+
+Colocando $x_2^2$ em evidência no expoente:
+
+$$f_Y(y) = \frac{1}{2\pi} \int_{-\infty}^{\infty} |x_2| e^{-\frac{x_2^2(y^2 + 1)}{2}} \, dx_2$$
+
+Dada a simetria da função em relação a $x_2$, podemos integrar de $0$ a $\infty$ e multiplicar o resultado por 2: $$f_Y(y) = \frac{2}{2\pi} \int_{0}^{\infty} x_2 e^{-\frac{x_2^2(y^2 + 1)}{2}} \, dx_2$$
+
+Para resolver esta integral, aplicamos a substituição: $$u = \frac{x_2^2(y^2 + 1)}{2} \implies du = x_2(y^2 + 1) \, dx_2 \implies x_2 \, dx_2 = \frac{du}{y^2 + 1}$$
+
+Substituindo os termos na integral: $$f_Y(y) = \frac{1}{\pi} \cdot \frac{1}{y^2 + 1} \int_{0}^{\infty} e^{-u} \, du$$
+
+Visto que $\int_{0}^{\infty} e^{-u} \, du = 1$, obtemos a f.d.p. final: $$f_Y(y) = \frac{1}{\pi(1 + y^2)}$$
+
+Esta expressão corresponde exatamente à função de densidade de probabilidade de uma distribuição da Cauchy padrão.
+
+```{r}
+gera_cauchy_normais <- function(n) {
+ 
+  x1 <- rnorm(n)
+  x2 <- rnorm(n)
+  return(x1 / x2)
+}
+gera_cauchy_inv <- function(n) {
+  u <- runif(n)
+
+  x <- tan(pi * (u - 0.5))
+  return(x)
+}
+```
+
+```{r echo=FALSE}
+
+t1 <- system.time(amostra_inv <- gera_cauchy_inv(1e3))
+t2 <- system.time(amostra_norm <- gera_cauchy_normais(1e3))
+cat("Tempo usando a inversa para uma amostra de tamanho 1e3:", t1[3], "segundos\nTempo usando a normal padrão para uma amostra de tamanho 1e3:", t2[3], "segundos\n")
+
+
+```
+
+Comecei aumentar tamanho da amostra pra ver como as funções se comportam
+
+```{r echo=FALSE}
+t1 <- system.time(amostra_inv <- gera_cauchy_inv(1e4))
+t2 <- system.time(amostra_norm <- gera_cauchy_normais(1e4))
+cat("Tempo usando a inversa para uma amostra de tamanho 1e4:", t1[3], "segundos\nTempo usando a normal padrão para uma amostra de tamanho 1e4:", t2[3], "segundos\n")
+```
+
+```{r echo=FALSE}
+t1 <- system.time(amostra_inv <- gera_cauchy_inv(1e5))
+t2 <- system.time(amostra_norm <- gera_cauchy_normais(1e5))
+cat("Tempo usando a inversa para uma amostra de tamanho 1e5:", t1[3], "segundos\nTempo usando a normal padrão para uma amostra de tamanho 1e5:", t2[3], "segundos\n")
+```
+
+```{r echo=FALSE}
+t1 <- system.time(amostra_inv <- gera_cauchy_inv(1e6))
+t2 <- system.time(amostra_norm <- gera_cauchy_normais(1e6))
+cat("Tempo usando a inversa para uma amostra de tamanho 1e6:", t1[3], "segundos\nTempo usando a normal padrão para uma amostra de tamanho 1e6:", t2[3], "segundos\n")
+```
+
+Concluimos emtão que o método da inversa é superior ao método do que a da padrão.
+
+```{r}
+n_medias <- 1e3
+tamanho_amostra <- 1e3 
+medias_cauchy <- replicate(n_medias, mean(gera_cauchy_inv(tamanho_amostra)))
+
+hist(medias_cauchy, breaks=500, freq=FALSE, xlim=c(-10, 10), 
+     main="TCL na Cauchy: A média continua sendo uma Cauchy!", 
+     col="plum", border="white")
+
+
+curve(dlogis(x, 0, 1), add=TRUE, col="red", lwd=2)
+curve(dcauchy(x, 0, 1), add=TRUE, col="blue", lwd=2, lty=2)
+
+legend("topright", legend=c("Distribuição das Médias", "Densidade Cauchy Teórica"),
+       col=c("plum", "blue"), lwd=c(10, 2))
+```
+
+## Questão 8
+
+a)  
+
+```{r}
+a <- 2.7; b <- 6.3
+f <- function(x){dbeta(x, a, b)}
+n <- 1000
+
+maximo <- optimize(f, interval = c(0,1), maximum = T)$objective
+
+x1 <- runif(n)
+y1 <- runif(n, 0, maximo)
+aceito1 <- y1 <= f(x1)
+
+cat("Proporção de aceitação da uniforme:", mean(aceito1))
+```
+
+b)  
+
+```{r}
+g <- function(x){dbeta(x, 2, 6)}
+maximo2 <- optimize(function(x){f(x)/g(x)}, interval=c(0,1), maximum=T)$objective
+
+x2 <- rbeta(n, 2, 6)
+y2 <- runif(n, 0, maximo2 * g(x2))
+aceito2 <- y2 <= f(x2)
+
+cat("Proporção ed aceitação beta(2,6):", mean(aceito2))
+```
+
+c)  
+
+```{r}
+par(mfrow = c(1, 2))
+
+plot(x1, y1, col = ifelse(aceito1, "blue", "red"), pch = 20, cex = 0.5, main = "Com uniforme")
+curve(f(x), add = T, lwd = 2)
+
+plot(x2, y2, col = ifelse(aceito2, "blue", "red"), pch = 20, cex = 0.5, main = "Com beta(2,6)")
+curve(f(x), add = T, lwd = 2)
+```
+
+## Questão 9
+
+```{r}
+n <- 1000
+L <- 0.05
+
+#método da inversa
+metodo <- function(n){
+  u <- runif(n)
+  x_simulado <- -log(1 - u*(1 - exp(-L)))
+  esperanca_estimada <- mean(x_simulado)
+  
+  return(esperanca_estimada)
+}
+rtd <- metodo(n)
+cat("A esperança estimada é", rtd)
+```
+
+```{r}
+
+valor_exato <- (1 - (1 + L)*exp(-L))/(1 - exp(-L))
+
+cat("Valor exato:", valor_exato, "\n")
+cat("Diferença absoluta:", abs(rtd - valor_exato))
+
+```
+
+## Questão 10
+
+```{r}
+gera_10 <- function(n) {
+  x_final <- numeric(n)
+  
+  for(i in 1:n) {
+    sucesso <- FALSE
+    while(!sucesso) {
+      u1 <- runif(1)
+      if(u1 < 2/3) {
+        
+        candidato <- runif(1)
+        if(runif(1) < (1 + exp(-2*candidato))/2) {
+          x_final[i] <- candidato
+          sucesso <- TRUE
+        }
+      } else {
+        x_final[i] <- 1 + rexp(1, rate = 2)
+        sucesso <- TRUE
+      }
+    }
+  }
+  return(x_final)
+}
+
+amostra10 <- gera_10(1e3)
+hist(amostra10, breaks=50, prob=TRUE, col="lightblue")
 ```

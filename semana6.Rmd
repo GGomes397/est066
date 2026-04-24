@@ -1,0 +1,64 @@
+---
+title: "semana6"
+output: html_document
+---
+
+Dado U\~Uniforme(0,1) queremos estimar $\theta$
+
+### 1º Caso :
+
+$$
+\theta=\int_{0}^{1}g(x)f_u(x)dx=\mathbb{E}[g(u)]
+$$
+
+$U_1,U_2,..,U_n$
+
+Uma amostra aleatória iid com distribuição Uniforme(0,1) . Pela Lei dos grandes números temos :
+
+$$
+\frac{1}{n}\sum_{i=1}^{n}g(U_i)\longrightarrow \mathbb{E}[g(U)]=\theta
+$$
+
+### 2º Caso :
+
+$$
+\theta=\int_{a}^{b}g(x)dx\text{ ,}a\lt b
+$$
+
+Temos que
+
+$$
+Y=\frac{x-a}{b-a}
+$$
+
+então
+
+$$
+X=(b-a)Y+a
+$$
+
+chegamos então que
+
+$$
+\theta=\int_{a}^{b}g(x)dx\text{ ,}a\lt b\Rightarrow \\\theta=\int_{0}^{1}g((b-a)y+a)(b-a)dx
+$$
+
+Vamos nos basear no 2º caso para a aula de hoje . Vamos usar a distribuição normal padrão
+
+$$
+\theta=P(1<Z< 2)=0.13590
+$$
+
+Vamos tentar estimar esse $\theta$ usando o procedimento vai ser o seguinte :
+
+1 -Gerar uma amostra aleatória de tamanho n identicamente distribuídas com distribuição U\~Uniforme (0,1)
+
+2- Calcular h_barr \<- mean(h(u))
+
+3- Fazer $\theta=\frac{1}{\sqrt{2\pi}}*h_{bar}$
+
+$$
+log(Erro)=\log_{10}(|\hat{\theta}-\theta|)
+$$
+
+Depois de fazer o procedimento e chegarmos nesse estimador nós tentamos ver qual o tamanho de amostra que já chegariamos nesse valor . Depois de faer essa função e encontrarmos esse estimadores vamos querer o valor médio dos estimadores , erro padrão das estimativas e log erro absoluto .
