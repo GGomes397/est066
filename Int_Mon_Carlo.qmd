@@ -1,0 +1,87 @@
+---
+title: "Int_Mon_Carlo"
+format: html
+---
+
+Nessa nova parte da matéria nós começaremos estudar sobre a integração de Monte Carlo , porém antes de falarmos sobre isso nós precisamos entender as motivações que nos levama montar esses códigos.
+
+### Motivação da Integração de Monte Carlo
+
+A integração numérica é uma ferramenta essencial quando integrais não podem ser resolvidas analiticamente. Existem duas abordagens filosóficas distintas:
+
+**Métodos Determinísticos (Quadratura):** Avaliam a função em pontos fixos, seguindo regras matemáticas precisas.
+
+**Métodos Probabilísticos (Monte Carlo)**: Usam números aleatórios para estimar a integral através da Lei dos Grandes Números.
+
+Ambos buscam o mesmo objetivo, mas por caminhos completamente diferentes.
+
+## Quadratura
+
+Quadratura numérica aproxima integrais pela soma ponderada de valores da função em pontos específicos:
+
+$$\int_{a}^{b}f(x)\approx \sum_{i=1}^{n}w_{i}f(x_i)$$
+
+nde $x_i$ são os **nós** (pontos) e$w_i$ os **pesos**, ambos determinados pelo método.
+
+## Monte Carlo
+
+O foco central é a **Integração de Monte Carlo**, um método que utiliza a aleatoriedade e a inferência estatística para aproximar o valor de integrais definidas que seriam difíceis ou impossíveis de resolver por métodos analíticos tradicionais.Diversas quantidades de interesse, na Estatística, são funções de Integrais. Em sua grande maioria, tais integrais não apresentam solução analítica A **Integração de Monte Carlo** é uma aproximação numérica estocástica uma aproximação numérica não estocástica seria a **Quadratura.**
+
+### Paradigma da Integração de Monte Carlo
+
+A Integração de Monte Carlo converte um problema de Cálculo (encontrar a área exata sob uma curva) em um problema de Estatística (calcular a média de uma amostra).
+
+A lógica matemática estabelece que, para estimar uma integral como $\int_a^b f(x) dx$, podemos gerar uma grande quantidade de números aleatórios (amostras) dentro desse intervalo de integração, aplicar a função a esses números e calcular a média dos resultados. Graças à **Lei dos Grandes Números**, conforme o tamanho da amostra aumenta, essa média amostral converge para o valor verdadeiro da integral.
+
+### O Papel da Geração Aleatória
+
+Os números aleatórios (gerados por funções como `runif()`) atuam como o mecanismo de amostragem não enviesada do espaço da função. A qualidade da estimativa de Monte Carlo depende diretamente da qualidade do gerador de números pseudoaleatórios, que deve garantir que todo o domínio seja explorado de maneira uniforme.
+
+| Propriedade | Descrição | Importância para Monte Carlo |
+|---------------------------|------------------|---------------------------|
+| **Independência** | Nº não correlacionados | Garante a convergência da média |
+| **Uniformidade** | Distribuição Equiprovável | Permite estimar as integrais como esperanças |
+| **Período Longo** | Ciclo antes de repetir | Evita viés em grandes amostras |
+
+: Propriedades Essencias da geração de Nº's aleatórios para integração de Monte Carlo .
+
+Números uniformes podem ser transformados para gerar outras distribuições ou mapear domínios.Princípio Matemático: Se U∼Uniforme(0,1) e $X=g(U)$, então a distribuição de X é determinada por g.
+
+## Avaliação de Estimadores Estatísticos
+
+Ao utilizar o método de Monte Carlo, estamos criando um estimador numérico. Como os resultados variam a cada execução devido à natureza estocástica do método, é necessário avaliar a confiabilidade desse estimador por meio de simulações (repetições do experimento, como visto no uso da função `replicate()` no R). As três métricas fundamentais avaliadas são:
+
+- **Viés (Bias):** Mede a diferença entre a esperança do estimador e o valor real do parâmetro. Um viés próximo de zero indica que as estimativas estão, em média, centradas no valor correto.
+
+  $$\text{Viés} = E[\hat{\theta}] - \theta\ $$
+
+- **Erro Padrão (Standard Error):** Mede a variabilidade ou dispersão das estimativas em torno da sua própria média.
+
+- **Erro Quadrático Médio (EQM / MSE):** Combina a variância e o viés ao quadrado em uma única métrica, representando o quão distante a estimativa costuma ficar do valor real.
+
+  $$\text{EQM} = E[(\hat{\theta} - \theta)^2] = \\ \text{Variância} + (\text{Viés})^2\ $$
+
+### Técnicas Avançadas e Limitações Computacionais
+
+4.1. Integração em Domínios Infinitos Quando a necessidade de integração envolve limites de zero ao infinito (ou menos infinito a mais infinito), a amostragem uniforme direta torna-se **impossível**. A solução matemática aplicada em Estatística Computacional é a Mudança ou Substituição de Variáveis.Por exemplo, utilizando a transformação $x = \frac{u}{1-u}$, mapeia-se o intervalo finito de 0 a 1 (onde o computador consegue sortear números facilmente) para o intervalo de 0 ao infinito. O uso do Jacobiano dessa transformação garante que a área sob a curva seja preservada.
+
+4.2. O Problema do Underflow Tentativas de integrar o produto de densidades (Verossimilhança) usando abordagens diretas frequentemente falham na prática computacional. Computadores possuem limites de precisão para pontos flutuantes. Ao multiplicar muitas probabilidades pequenas, o resultado aproxima-se rapidamente de zero absoluto, causando o Underflow. É por isso que, na prática, trabalha-se com a soma dos logaritmos das probabilidades (Log-Verossimilhança) em vez do produto.
+
+### 5 . Monte Carlo versus Quadratura Numérica
+
+| Caracaterística | Quadratura Numérica | Integração de Monte Carlo |
+|-------------------|-----------------------|------------------------------|
+| Abordagem | Determinística (avalia a função em uma grade fixa e regular). | Estocástica (avalia a função em pontos sorteados aleatoriamente). |
+| Resultados | Exatamente iguais a cada execução. | Variam a cada execução (dependem da semente aleatória). |
+| Performance (1 ou 2 dimensões) | Altamente precisa e rápida. | Menos eficiente computacionalmente. |
+| Performance (Múltiplas dimensões) | Falha devido à **Maldição da Dimensionalidade**. | Robusta; a taxa de erro depende do tamanho da amostra, não do número de dimensões. |
+
+: Comparação entre os métodos
+
+### 
+
+### 5.1. A Maldição da Dimensionalidade
+
+A **Quadratura Numérica** (como a função determinística `integrate()` do R) é a ferramenta ideal para problemas de baixa dimensão. No entanto, em problemas estatísticos modernos que envolvem muitas variáveis simultâneas (como integrais de alta dimensão em Inferência Bayesiana), o número de pontos de grade necessários para a quadratura cresce exponencialmente, tornando o cálculo computacionalmente intratável.
+
+A **Integração de Monte Carlo** supera essa barreira, pois seu erro decresce a uma taxa proporcional à raiz quadrada do tamanho da amostra (aproximadamente $\frac{1}{\sqrt{n}}$), independentemente da dimensão do problema. É isso que a consolida como a técnica padrão na Estatística Computacional avançada.

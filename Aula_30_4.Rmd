@@ -6,6 +6,21 @@ editor_options:
     wrap: 72
 ---
 
+O que vamos fazer aqui é usar a idéia da integração de monte carlo pra
+resolver o problema a integração de monte Carlo se baseia numa integral
+: $$\theta=\int_{a}^{b}g(x)dx$$ Mas você pode reescrever essa integral
+assim , se pensar em uma distribuição Uniforme(a,b):
+$$\theta=\int_{a}^{b}g(x)dx\\(b-a)\int_{a}^{b}g(x)\frac{1}{b-a}dx$$ Com
+isso $\frac{1}{b-a}$ é uma f.d.p de uma variável aleatória uniforme U\~
+Unifome(a,b). Logo pela Lei dos Grandes Números
+$$\theta=(b-a)E[g(U)]\approx(b-a)\frac{1}{n}\sum_{1=1}^{n}g(u_i)$$ onde
+cada $u_i$ é um número aleatório gerado da uniforme(a,b). Em palavras: A
+integral de $g(x)$ no intervalo [a,b] é aproximadamente a média dos
+valores da função avaliada em pontos aleatórios uniformemente
+distribuídos, multiplicada pelo comprimento do intervalo.
+
+Aplicando essa idéia para função que nos temos faremos
+
 $$\theta=\int_{0}^{\infty }f(x)dx$$ Outra alternativa
 $$u=\frac{x}{1+x}\Longrightarrow x=\frac{u}{u+1}$$ Quando $x\to 0$ ,
 $u \to 0$. Quando $x\to \infty$ , $u \to 1$.
@@ -28,6 +43,9 @@ $$h(u)=\frac{e^{-\frac{(\frac{u}{1-u})^{2}}{2}}}{(1-u)^{2}}$$
 Fizemos isso em código na parte 1 . Na parte 2 vamos resolver isso na
 próxima aula.
 
-Queremos estimar $\pi$ que está dentro de um quadrado 
-Como que através de uma uniforme (0,1) eu gero -1. Para (X,Y) independentes x~Uniforme(-1,1) e Y~Uniforme(-1,1) $P\{ X^{2}+Y^{2}\le 1 \}=\frac{\pi}{4}$ . Vamos fazer o $U_1$~Uniforme(0,1) e $U_2$~Uniforme(0,1). 
+Queremos estimar $\pi$ que está dentro de um quadrado Como que através
+de uma uniforme (0,1) eu gero -1. Para (X,Y) independentes
+x\~Uniforme(-1,1) e Y\~Uniforme(-1,1)
+$P\{ X^{2}+Y^{2}\le 1 \}=\frac{\pi}{4}$ . Vamos fazer o
+$U_1$\~Uniforme(0,1) e $U_2$\~Uniforme(0,1).
 $$I_{0}(U_1,U_2)\{ 1, \ \ (2U_10-1)^2\\ \{0,\ cc$$
