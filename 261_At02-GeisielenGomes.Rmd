@@ -1,0 +1,128 @@
+---
+title: "Atividade 02"
+author: "Geisielen Gomes"
+date: "2026-05-10"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Questão 1
+
+Nosso objetivo é calcular aproximações para as integrais dessa questão usando algum método de integração numérica, o método que escolhemos é o método de Monte Carlo .
+
+## Método de Monte Carlo
+
+Antes de explicarmos o método de monte carlo nós vamos explicar a 'base' do método
+
+### A Lei do Grandes Números
+
+A Lei dos grandes Números nos diz que a média amostral dos resultados de um mesmo experimento repetidas vezes tende se aproximar do valor da média populacional .
+
+Com o Método de Monte Carlo nós vamos tratar a integral que queremos calcular como a esperança de uma população e vamos gerar uma amostra pra nos aproximarmos deste valor .Faremos isso da seguinte forma, temos uma integral que nós desejamos calcular
+
+$$\int_{a}^{b}f(x)dx$$
+
+Note que $\frac{b-a}{b-a}=1$ então quando colocamos isso na integral não alteramos o seu valor
+
+$$\int_{a}^{b}f(x)\frac{b-a}{b-a}dx$$
+
+$$(b-a)\int_{a}^{b}f(x)\frac{1}{b-a}dx$$
+
+Note que
+
+$$\mathbb{E}[X]=\int_{a}^{b}f(x)\frac{1}{b-a}dx$$
+
+Onde $X\sim \text{ Uniforme (a,b)}$.Então
+
+$$I\simeq (b-a)\mathbb{E}[X]$$
+
+Onde $I$ é aproximação da integral desejada pelo método de Monte Carlo .
+
+## Procedimento para os cálculos
+
+1.  Vamos Gerar n valores através de $U_{i},...,U_{n}\sim \text{ Uniforme (a,b)}$, onde $(a,b)$ são limites de integração
+2.  Vamos criar uma variável que tenha a expressão de $f(x)$;
+3.  Vamos calcular $\mathbb{E}[f(x)]$, com isso $f(x)$ se torna uma estimativa ;
+4.  E determinar $I= (b-a)\mathbb{E}[f(x)]$
+
+Ps : Sabemos que quanto maior o N que escolhermos melhor vai ser aproximação de $I$ para valor Real . Então eu vou escolher n=1e4
+
+### a
+
+$$\int_{0}^{1}e^{e^{x}}dx$$ O valor real dessa integral é de $a=6.3165638$. Agora vamos tentar simular isso usando o monte Carlo .
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, collapse=TRUE}
+n <- 1e4
+a.1 <- 0
+b.1 <- 1
+real_a <- integrate(function(x) exp(exp(x)), a.1, b.1)$value
+u_n1 <- runif(n,min = a.1,max=b.1)
+I.a <- (b.1-a.1)*mean(exp(exp(u_n1)))
+
+cat("Valor real é ", real_a, "\n")
+cat("O valor aproximado é ", I.a, "\n")
+cat("O erro absoluto foi de ", abs(real_a-I.a), "\n")
+```
+
+### b
+
+$$\int_{-2}^{2}e^{x+x^2}dx$$
+
+O valor exato dessa integral é de
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, collapse=TRUE}
+a.2 <- -2
+b.2 <- 2
+real_b <- integrate(function(x) exp(x + x^2), -2, 2)$value
+u_n2 <- runif(n, min = a.2, max = b.2)
+I.b <- (b.2 - a.2) * mean(exp(u_n2 + u_n2^2))
+cat("Valor real é ", real_b,"\n")
+cat("O valor aproximado é ", I.b,"\n")
+cat("O erro absoluto foi de ", abs(real_b-I.b),"\n")
+```
+
+### c
+
+$$\int_{0}^{\infty}\frac{x}{(1+x^2)^2}dx$$
+
+Até agora nós estavamos lidando com método de monte carlo com limites de integração eram constantes. Quando lidamos com um limite no infinito nós vamos ter que fazer uma mudança de variável, precisamos de uma transformação que ao mudarmos as variáveis e avaliarmos nos limites de integração original eles nos resultem em valores constantes, porque assim podemos continuar a usar o procedimento da integração de monte Carlo .A transformação que vamos propor é
+
+$$x=\frac{1}{u}-1\\
+x+1=\frac{1}{u}\\$$
+
+$$u=\frac{1}{x+1}$$
+
+Note que ao avaliarmos essa função nos limites de integração temos
+
+- Para $x\to0$
+
+$$\lim_{x \to 0} \frac{1}{x+1}=1$$
+
+- Para $x\to\infty$
+
+  $$\lim_{x \to \infty } \frac{1}{x+1}=0$$
+
+Então a nossa transformação atingiu o nosso desejo , mas para calcularmos essa integral precisamos da integral em função de $u$ pra isso faremos
+
+$${\frac{d (\frac{1-u}{u}))}{dx}}=\frac{-1}{u^2}du$$
+
+voltando a integral
+
+$$\int_{0}^{1}\frac{\frac{1-u}{u^2}}{(1+(\frac{1-u}{u})^2)^2}\frac{1}{u^2}du\\
+\\\int_{0}^{1}\frac{-u^2+u}{2u^{2}-u+1}du$$
+
+Agora vamos seguir com o procedimento
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, collapse=TRUE}
+a.3 <- 0
+b.3 <- 1
+real_c <- integrate(function(u) (-u^2 + u)/(2 * u^2 - 2 * u + 1)^2, a.3, b.3)$value
+real_c
+u_n3 <- runif(n, min = a.3, max = b.3)
+I.c <- (b.3 - a.3) * mean((-u_n3^2 +u_n3)/(2 * u_n3^2 - 2 *u_n3 + 1)^2)
+cat("Valor real é ", real_c,"\n")
+cat("O valor aproximado é ", I.c,"\n")
+cat("O erro absoluto foi de ", abs(real_c-I.c),"\n")
+```

@@ -54,17 +54,13 @@ Como o **p-valor (0.8444)** foi significativamente maior que 0.5 , não rejeitam
 
 Utilizando o mesmo método da ultima questão chegamos que
 
-$$
-u=\frac{x^2+x}{2}\\
+$$u=\frac{x^2+x}{2}\\
 2u=x^2 +x\\
-x^2+x-2u=0
-$$
+x^2+x-2u=0$$
 
 Procurando as raízes dessa equação chegamos em
 
-$$
-x=\frac{-1+\sqrt{1+8u}}{2}
-$$
+$$x=\frac{-1+\sqrt{1+8u}}{2}$$
 
 Escolhemos essa raiz porque a outra raíz chegariamos em valores negativos o que seria uma contradiçõ já uma fdp só resulta em valores positivos .
 
@@ -82,24 +78,18 @@ hist(amostra2, breaks = 30, main = "Gerador Questão 2", col = "gray")
 
 Do enunciado temos que :
 
-$$
-f_x(x)=\exp^{-2\left|x \right|}
-$$
+$$f_x(x)=\exp^{-2\left|x \right|}$$
 
 A acumulada dessa função é dada por
 
-$$
-F_X(x)=\frac{1}{2}\exp^{2x}, x<0\\
-F_X(x)=1-\frac{1}{2}\exp^{2x}, x\ge 0
-$$
+$$F_X(x)=\frac{1}{2}\exp^{2x}, x<0\\
+F_X(x)=1-\frac{1}{2}\exp^{2x}, x\ge 0$$
 
 Pelo método da inversa temos que
 
-$$
-u=F_x(x)\\
+$$u=F_x(x)\\
 x=\frac{\ln(2u)}{2} , u<0.5\\
-x=\frac{\ln(-2u+2)}{2}, u>0.5
-$$
+x=\frac{\ln(-2u+2)}{2}, u>0.5$$
 
 Criando um gerador baseado nessas informações temos
 
@@ -142,9 +132,7 @@ chisq.test(contagem_obs)
 
 Como nosso teste deu um p-valor \> 0.5 temos que o nosso gerador foi uma boa escolha . Para fazermos com a função que ja fizemos mas vamos introduzir um parâmetro de escala e um de locação , onde X segue uma distribuição Logística (0,1) teremos então
 
-$$
-Z=X\beta-\mu
-$$
+$$Z=X\beta-\mu$$
 
 para exemplificar isso vamos fazer definindo esses parâmetros e vamos comparar com o gráficos logistica nesses parâmetros
 

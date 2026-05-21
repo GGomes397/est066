@@ -12,11 +12,12 @@ gera.1 <- function(n){
   return(mean(h(u)))
 }
 estimativas <- replicate(1000, gera.1(n))
-hist(estimativas, freq=F))
-         )diff()quantile(estimativas, probs = c(0.025, 0.975))
+hist(estimativas, freq=F)
+quantile(estimativas, probs = c(0.025, 0.975))
+diff(quantile(estimativas, probs = c(0.025, 0.975)))
 #fazendo isso para n=10000
 estimativas <- replicate(100, gera.1(n))
-hist(estimativas, freq=F)bs = c(0.025, 0.975))
+hist(estimativas, freq=F,bs = c(0.025, 0.975))
 lines(density(estimativas), col = "blue", lwd = 2)
 mean(estimativas)
 sd(estimativas)
@@ -43,4 +44,5 @@ diff(quantile(estimativas, probs = c(0.025, 0.975)))
 
 #integrate(veross,-Inf,Inf)
 
-
+n <- c(10,1e2,1e3,1e4,1e5,1e6)
+er_rela <- (estimativa-pi)/pi

@@ -1,0 +1,111 @@
+---
+title: "Método da transformação"
+author: "Geisielen Gomes"
+format: revealjs
+editor: visual
+---
+
+# Método da Transformação
+
+Seja $X\sim N(\mu,\sigma^2)$ eu quero gera $Y=ln(X)$, ou seja ,$Y\sim lognormal$ . Então $Y=g(X)$ gerando isso
+
+```{r}
+n <- 1000
+# 1. Geramos a variável base (Normal)
+x_norm <- rnorm(n, mean = 0, sd = 1) 
+# 2. Aplicamos a transformação matemática (Y = e^X)
+y_lognorm <- exp(x_norm)
+
+hist(y_lognorm, breaks = 40, probability = TRUE, 
+     col = "steelblue", border = "white",
+     main = "Transformação: Normal para Lognormal", 
+     xlab = "Valor", ylab = "Densidade", 
+     xlim = c(0, 5),
+     ylim=c(0,0.7)) # Limitando eixo X para melhor visualização
+
+# Adicionando a curva teórica
+curve(dlnorm(x, meanlog = 0, sdlog = 1), 
+      col = "red", lwd = 2, add = TRUE)
+```
+
+# Método da Aceitação e Rejeição
+
+No método da aceitação e rejeição nós temos uma f(x) que é díficil integrar e montar inversa dela para montarmos o método da inversa .
+
+Simular uma variável aleatória com função densidade $f(x) = \frac{3}{4}(1 - x^2)$ no intervalo $-1 < x < 1$. Essa f(x) não é difícil calcular integral mas é difícil achar a inversa já que temos $x^{2}$ na função .
+
+Vamos criar $g(x)$ tal que o seu domínio englobe o dominio de $f(x)$ .
+
+Para isso, usamos como candidata uma Uniforme $g(x) \sim U(-1, 1)$, que tem densidade $\frac{1}{2} $.
+
+```{r}
+# 1. Definimos as funções de densidade
+f <- function(x) { (3/4) * (1 - x^2) }
+g <- function(x) { 1/2 } # Densidade da Uniforme(-1, 1)
+
+# 2. Definimos a função da razão que queremos maximizar
+razao <- function(x) { f(x) / g(x) }
+
+# 3. O R ENCONTRA O 'C' AUTOMATICAMENTE!
+# Pedimos o máximo da função 'razao' no intervalo de -1 a 1
+busca_maximo <- optimize(razao, interval = c(-1, 1), maximum = TRUE)
+
+# O optimize retorna uma lista. O 'objective' é o valor de Y mais alto encontrado.
+c_automatico <- busca_maximo$objective
+
+cat("O valor de c calculado automaticamente foi:", c_automatico, "\n")
+```
+
+```{r}
+
+n <- 1000
+amostra_ar <- numeric(n)
+k <- 1
+
+while(k <= n) {
+  y <- runif(1, min = -1, max = 1)
+  u <- runif(1)
+  
+  if (u <= f(y) / (c_automatico * g(y))) {
+    amostra_ar[k] <- y
+    k <- k + 1
+  }
+}
+
+# (Opcional) Visualização rápida no R Base
+hist(amostra_ar, breaks = 30, probability = TRUE, col = "lightblue", main="Gerado com C automático")
+curve(f(x), add = TRUE, col = "red", lwd = 2)
+```
+
+No if dentro do while eu testei a condição de aceitação
+
+# Box-Muller 
+
+Gerar variáveis aleatórias independentes com distribuição Normal Padrão $ Z \sim N(0,1) $. Este algoritmo trabalha sempre gerando valores aos pares.
+
+```{r}
+n <- 1000
+# Precisamos de pares, então calculamos a metade do tamanho da amostra
+n_pares <- ceiling(n / 2)
+
+# 1. Gera vetores com as duas uniformes independentes
+u1 <- runif(n_pares)
+u2 <- runif(n_pares)
+
+# 2. Aplica as equações de Box-Muller
+z1 <- sqrt(-2 * log(u1)) * cos(2 * pi * u2)
+z2 <- sqrt(-2 * log(u1)) * sin(2 * pi * u2)
+
+# 3. Concatena os dois vetores em um só e recorta o tamanho exato 'n'
+amostra_bm <- c(z1, z2)[1:n]
+
+# Validação Visual no R Base
+hist(amostra_bm, breaks = 30, probability = TRUE, 
+     col = "purple", border = "white",
+     main = "Box-Muller: Normal Padrão", 
+     xlab = "Valor", ylab = "Densidade")
+
+# Adicionando a curva teórica
+curve(dnorm(x), 
+      col = "red", lwd = 2, add = TRUE)
+```

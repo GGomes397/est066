@@ -25,7 +25,9 @@ nde $x_i$ são os **nós** (pontos) e$w_i$ os **pesos**, ambos determinados pelo
 
 ## Monte Carlo
 
-O foco central é a **Integração de Monte Carlo**, um método que utiliza a aleatoriedade e a inferência estatística para aproximar o valor de integrais definidas que seriam difíceis ou impossíveis de resolver por métodos analíticos tradicionais.Diversas quantidades de interesse, na Estatística, são funções de Integrais. Em sua grande maioria, tais integrais não apresentam solução analítica A **Integração de Monte Carlo** é uma aproximação numérica estocástica uma aproximação numérica não estocástica seria a **Quadratura.**
+O foco central é a **Integração de Monte Carlo**, um método que utiliza a aleatoriedade e a inferência estatística para aproximar o valor de integrais definidas que seriam difíceis ou impossíveis de resolver por métodos analíticos tradicionais.
+
+Diversas quantidades de interesse, na Estatística, são funções de Integrais. Em sua grande maioria, tais integrais não apresentam solução analítica A **Integração de Monte Carlo** é uma aproximação numérica estocástica uma aproximação numérica não estocástica seria a **Quadratura.**
 
 ### Paradigma da Integração de Monte Carlo
 
@@ -38,7 +40,7 @@ A lógica matemática estabelece que, para estimar uma integral como $\int_a^b f
 Os números aleatórios (gerados por funções como `runif()`) atuam como o mecanismo de amostragem não enviesada do espaço da função. A qualidade da estimativa de Monte Carlo depende diretamente da qualidade do gerador de números pseudoaleatórios, que deve garantir que todo o domínio seja explorado de maneira uniforme.
 
 | Propriedade | Descrição | Importância para Monte Carlo |
-|---------------------------|------------------|---------------------------|
+|----|----|----|
 | **Independência** | Nº não correlacionados | Garante a convergência da média |
 | **Uniformidade** | Distribuição Equiprovável | Permite estimar as integrais como esperanças |
 | **Período Longo** | Ciclo antes de repetir | Evita viés em grandes amostras |
@@ -63,14 +65,18 @@ Ao utilizar o método de Monte Carlo, estamos criando um estimador numérico. Co
 
 ### Técnicas Avançadas e Limitações Computacionais
 
-4.1. Integração em Domínios Infinitos Quando a necessidade de integração envolve limites de zero ao infinito (ou menos infinito a mais infinito), a amostragem uniforme direta torna-se **impossível**. A solução matemática aplicada em Estatística Computacional é a Mudança ou Substituição de Variáveis.Por exemplo, utilizando a transformação $x = \frac{u}{1-u}$, mapeia-se o intervalo finito de 0 a 1 (onde o computador consegue sortear números facilmente) para o intervalo de 0 ao infinito. O uso do Jacobiano dessa transformação garante que a área sob a curva seja preservada.
+4.1. Integração em Domínios Infinitos
 
-4.2. O Problema do Underflow Tentativas de integrar o produto de densidades (Verossimilhança) usando abordagens diretas frequentemente falham na prática computacional. Computadores possuem limites de precisão para pontos flutuantes. Ao multiplicar muitas probabilidades pequenas, o resultado aproxima-se rapidamente de zero absoluto, causando o Underflow. É por isso que, na prática, trabalha-se com a soma dos logaritmos das probabilidades (Log-Verossimilhança) em vez do produto.
+Quando a necessidade de integração envolve limites de zero ao infinito (ou menos infinito a mais infinito), a amostragem uniforme direta torna-se **impossível**. A solução matemática aplicada em Estatística Computacional é a Mudança ou Substituição de Variáveis.Por exemplo, utilizando a transformação $x = \frac{u}{1-u}$, mapeia-se o intervalo finito de 0 a 1 (onde o computador consegue sortear números facilmente) para o intervalo de 0 ao infinito. O uso do Jacobiano dessa transformação garante que a área sob a curva seja preservada.
+
+4.2. O Problema do Underflow
+
+Tentativas de integrar o produto de densidades (Verossimilhança) usando abordagens diretas frequentemente falham na prática computacional. Computadores possuem limites de precisão para pontos flutuantes. Ao multiplicar muitas probabilidades pequenas, o resultado aproxima-se rapidamente de zero absoluto, causando o Underflow. É por isso que, na prática, trabalha-se com a soma dos logaritmos das probabilidades (Log-Verossimilhança) em vez do produto.
 
 ### 5 . Monte Carlo versus Quadratura Numérica
 
 | Caracaterística | Quadratura Numérica | Integração de Monte Carlo |
-|-------------------|-----------------------|------------------------------|
+|----|----|----|
 | Abordagem | Determinística (avalia a função em uma grade fixa e regular). | Estocástica (avalia a função em pontos sorteados aleatoriamente). |
 | Resultados | Exatamente iguais a cada execução. | Variam a cada execução (dependem da semente aleatória). |
 | Performance (1 ou 2 dimensões) | Altamente precisa e rápida. | Menos eficiente computacionalmente. |

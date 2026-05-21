@@ -1,0 +1,29 @@
+---
+title: "Untitled"
+format: pdf
+editor: visual
+---
+
+# Integração Dupla usando Monte Carlo
+
+```{r}
+#| include: false
+library(tinytex)
+```
+
+$$\int\int_{D} f(x,y) dxdy$$
+
+### Procedimento geral
+
+1.  Definir o domínio de integração
+    - Se D for retangular \[a,b\]x\[c,d\];
+
+    - Se D for uma região arbitrária ;
+
+Envolve-se D em um retângulo R =\[a,b\]x\[c,d\] que contenha D.
+
+2.  Gerar N pontos pontos aleatórios $(x_i,y_i)$ uniformemente no retângulo R.
+3.  Definir uma função indicadora $I_d(x_i,y_i)=1 \text{ se }(x_i,y_i)\in D \\ \text{0, Caso contrário}$
+4.  Calcular a estimativa de Monte Carlo $$\int\int_{D} f(x,y) dxdy =\frac{\text{area de R}}{N}\sum{f((x_i,y_i))}I_D(x_i,y_i)$$ $$=\frac{(b-a)(d-c)}{n}\sum{f((x_i,y_i))}I_D(x_i,y_i)$$ Para aula de hoje queromos calcular a seguinte a integral $$\theta=\int_{-\infty}^{^\infty}\cos2(100x)\frac{1}{\pi(1+x^2)}dx$$
+
+Sabemos que $\theta=0.5$ queremos estimar esse valor por monte carlo. Note que essa integral é uma cauc

@@ -1,0 +1,55 @@
+---
+title: "Normal Bivariada"
+author: "Geisielen Gomes"
+date: "2026-05-12"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+$$f(x, y) = \frac{1}{2\pi\sigma_x\sigma_y\sqrt{1-\rho^2}} \exp\left[ -\frac{1}{2(1-\rho^2)} \left( \frac{(x-\mu_x)^2}{\sigma_x^2} - \frac{2\rho(x-\mu_x)(y-\mu_y)}{\sigma_x\sigma_y} + \frac{(y-\mu_y)^2}{\sigma_y^2} \right) \right]$$
+Se o vetor aleaório ($X_{1},X_{2}$) .
+
+So colocar as informações sobre uma distribuição de ($X_{1},X_{2}$) de
+uma normal bivariada Vamos usar a condicional dessa normal bivariada
+essa é uma propriedade da normal bivariada
+$$f(X_{1},X_{2})=f_{X_{1}}(x_{1})f_{X_{2}|X_{1}}(x_{2})$$ Vamos tentar
+gerar isso usando duas normais padrão $Z_1,Z_2$. O procedimento vai
+ser 1. Gerar $Z_1$
+
+2\. Gerar $Z_2|Z_1$ com distribuição Normal bivariada
+\~$Normal(\mu^*,\sigma_{22}^{2*})$ $\mu=0+\rho(z_1)$ onde $\rho$ é
+covariância da normal bivariada
+
+Para verficar que marginal se Z1 é - vemos média e variância
+
+\- histograma
+
+-QQ-plot
+
+-Teste de normalidade
+
+\- Shapiro.test
+
+-Kolmogorov.test(não funciona nesse caso porque nós devemos passar uma
+normal com seus parâmetros então nesse caso não é bom utilizar )
+
+Faremos o mesmo procedimento com z2
+
+\- vemos média e variÂncia
+
+\- histograma
+
+-QQ-plot
+
+-Teste de normalidade
+
+\- Shapiro.test
+
+-Kolmogorov.test
+
+## Procedimento para normalidade Bivariada
+
+- Diagrama de dispersão -COV(Z1,Z2)
+- Teste Chi-squared
