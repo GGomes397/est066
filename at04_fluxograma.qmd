@@ -1,0 +1,33 @@
+---
+title: "Aula 09/06"
+format: html
+editor: visual
+---
+
+## Fluxograma 
+
+- Montar o gerador de números aleatórios
+
+- Gerar 100 números
+
+- Verificar o desempenho
+
+  - Histograma + densidade + suavização pelo density()
+
+  - empírica + fdistribuição+ teste k-s
+
+  - QQ-plot da mistura
+
+Na mistura de normais
+
+$X_1$\~N(-2 ; 0.5) com probabilidade de sorteio de 0.5
+
+$X_2$\~N(0 ; 0.2) com probabilidade de sorteio de 0.1
+
+$X_3$\~N(2 ; 1) com probabilidade de sorteio de 0.4
+
+Na mistura de gammas
+
+$Y_1$\~Gamma(11 ; 1/20) com probabilidade de sorteio de 2/3
+
+$Y_2$\~Gamma(11 ; 7/20) com probabilidade de sorteio de 1/3
