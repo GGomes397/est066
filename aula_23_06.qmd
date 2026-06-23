@@ -1,0 +1,13 @@
+---
+title: "Aula 23/06"
+format: html
+editor: visual
+---
+
+Se eu tenho uma população X com parâmetros t1 e t2. Nós temos uma amostra dessa população iid e queremos fazer intervalos de confiança e teste de hipoteses fazer uma estimação funcional (fdp ou fda).
+
+Só que se não sabemos a distribuição do população nós queremos fazer uma inferência não paramétrica . Queremos aprender a fazer o reamostragem ?
+
+### Porque a reamostragem é importante ??
+
+###  

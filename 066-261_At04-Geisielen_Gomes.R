@@ -1,6 +1,3 @@
-rnorm(1,mean = -2,sd=sqrt(0.5))
-rnorm(1,mean = 0,sd=sqrt(0.2))
-rnorm(1,mean = 2,sd=sqrt(1))
 p1 <- 0.5
 p2 <- 0.1 
 p3 <- 0.4
